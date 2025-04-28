@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive Quiz</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .quiz-container h2 {
+      margin-bottom: 20px;
+    }
+
+    .option {
+      background: #eee;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .option:hover {
+      background: #d6d6d6;
+    }
+
+    #submit {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background: #2575fc;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #submit:hover {
+      background: #6a11cb;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <h2 id="question">Loading Question...</h2>
+    <div id="options">
+      <!-- Options will be inserted here -->
+    </div>
+    <button id="submit">Submit Answer</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Which language is used for web development?",
+        options: ["Python", "C++", "JavaScript", "Java"],
+        answer: "JavaScript"
+      },
+      {
+        question: "What does CSS stand for?",
+        options: ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+        answer: "Cascading Style Sheets"
+      },
+      {
+        question: "Which HTML tag is used for a link?",
+        options: ["<link>", "<a>", "<href>", "<url>"],
+        answer: "<a>"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const submitBtn = document.getElementById('submit');
+    const resultEl = document.getElementById('result');
+    let selectedOption = '';
+
+    function loadQuestion() {
+      const currentQuiz = quizData[currentQuestion];
+      questionEl.innerText = currentQuiz.question;
+      optionsEl.innerHTML = '';
+
+      currentQuiz.options.forEach(option => {
+        const div = document.createElement('div');
+        div.classList.add('option');
+        div.innerText = option;
+        div.addEventListener('click', () => {
+          document.querySelectorAll('.option').forEach(opt => opt.style.background = '#eee');
+          div.style.background = '#ccc';
+          selectedOption = option;
+        });
+        optionsEl.appendChild(div);
+      });
+    }
+
+    submitBtn.addEventListener('click', () => {
+      if (selectedOption === '') {
+        alert('Please select an answer!');
+        return;
+      }
+
+      if (selectedOption === quizData[currentQuestion].answer) {
+        score++;
+      }
+
+      currentQuestion++;
+      selectedOption = '';
+
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      questionEl.style.display = 'none';
+      optionsEl.style.display = 'none';
+      submitBtn.style.display = 'none';
+      resultEl.innerText = `You scored ${score} out of ${quizData.length}! 🎉`;
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
